@@ -18,3 +18,6 @@ venv/
 *.swp
 .idea/
 .vscode/
+
+# demo-repo/ is a standalone seeded git repo (push it separately as "widgetapi"; see room/manual-setup.md)
+demo-repo/
