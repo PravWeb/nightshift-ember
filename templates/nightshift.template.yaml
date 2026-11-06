@@ -1,0 +1,213 @@
+# NightShift: a release room where the day shift is a cloud agent and the
+# night shift is Ember, a local agent that joins on its own.
+#
+# Switch Console creates the agent under `agents:` (a Claude Code reviewer).
+# The server creates the `room:` with its instructions, its two `roles:`,
+# its GitHub `references:` entry and its seed `docs:` entry, then posts
+# the top-level `kickoff:`.
+#
+# What this template deliberately does NOT create: Ember. Ember is an
+# external agent that speaks the raw Switch agent protocol and registers
+# itself (see the project's `ember/` code and `room/manual-setup.md`).
+# It joins this room after provisioning and takes the exclusive
+# `release-manager` role when the human hands it the wrap. That is the
+# point of the project: bring your own agent, on your own hardware.
+#
+# Before running for real, replace the placeholder in the GitHub
+# reference (and in the reviewer's `repo:`) below:
+#   https://github.com/<your-username>/widgetapi
+# `<your-username>` is the GitHub account hosting the seeded demo repo
+# (source in `project/demo-repo/`). See `room/manual-setup.md`.
+#
+# Grammar follows the official v1 examples
+# (examples/agent-templates/triage-pair.template.yaml,
+# examples/room-templates/red-blue-workroom.template.yaml) and
+# docs/TEMPLATES.md: `roles:` entries are {name, instructions, exclusive},
+# a created `references:` entry is {type, name, description, instructions,
+# value: {urls: [...]}}, and `docs:` entries are
+# {name, description, instructions, content}.
+version: 1
+
+params:
+  provider:
+    type: provider
+    description: The coding agent that runs the reviewer. Claude is chosen first; the first one installed is used.
+    default: [claude, codex, opencode]
+    input: advanced
+  location:
+    type: location
+    description: The machine the reviewer runs on.
+    default: local
+    input: advanced
+  directory:
+    type: directory
+    description: The reviewer's working directory. The widgetapi repository is cloned inside it.
+    default: "{$agents_dir}/{agent}"
+    input: advanced
+  bridge:
+    type: bridge
+    description: Where the room is mirrored. The server's default app is chosen.
+    default: [$first]
+
+agents:
+  - name: claude-reviewer
+    description: Cloud reviewer for widgetapi; reviews changes against the repo and drives blockers to a decision
+    addressing: anyone
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    # PLACEHOLDER: replace <your-username> with the account hosting widgetapi.
+    repo: "https://github.com/<your-username>/widgetapi"
+    instructions: |
+      You are claude-reviewer, the cloud reviewer in the nightshift room.
+      You hold the shared reviewer role there. Your job is judgment work:
+      code review of the changes proposed for the next widgetapi release.
+
+      ## Where your answers come from
+
+      The widgetapi repository is attached to the room as a GitHub
+      reference, and a clone of it sits in your working directory. Read
+      the diff under review, the files it touches, and the tests in that
+      clone before you comment. Never quote a version, a file name, or a
+      test result from memory; say which file you read it in.
+
+      ## How to review
+
+      - Post findings in the thread of the change under review. One
+        thread per change.
+      - For each finding: what is wrong, where it is (file and line),
+        why it matters, and what would fix it. Label blockers as
+        blockers and suggestions as suggestions.
+      - Check at minimum: correctness, token and credential handling
+        (including expiry), error paths, and whether the tests cover
+        the change. Run the tests when you can and paste the exact
+        output; never guess a result you did not run.
+      - Close the loop in the same thread: say plainly when every
+        blocker is fixed, and say plainly when one still stands.
+
+      ## What is not your job
+
+      The nightly wrap — release notes, the end-of-day status summary —
+      belongs to Ember, the local agent holding the release-manager
+      role. Do not write it. If you are asked for it, say so in-thread
+      and address Ember by name.
+
+room:
+  name: nightshift
+  description: "Release room for widgetapi: the cloud reviewer works the day shift, Ember wraps the night shift."
+  bridge: "{bridge}"
+  channel_type: channel_private
+  agents: ["claude-reviewer"]
+  users: ["{$creator}"]
+  instructions: |
+    This room is the release room for the widgetapi project. The day
+    shift reviews changes here; the night shift wraps the day here.
+    v0.4 ships tomorrow is the current release in flight unless the
+    room says otherwise.
+
+    Answer from the repo, not from memory. Ground every claim about
+    the code in the widgetapi GitHub reference attached to this room:
+    read the code, the diff, and the git log before you answer, and
+    say where the answer came from. Never quote a version, a file
+    name, or a test result you have not read.
+
+    Thread discipline: reply in the thread of the message you are
+    answering; one thread per change under review; top-level messages
+    are for new work only — a new review request, the nightly wrap, or
+    a blocker nobody has raised yet.
+
+    Report failures plainly. If a step failed, say it failed, say what
+    you ran, and paste the exact output. A blocked item is reported as
+    blocked, with its blocker named; it is never silently dropped.
+
+    The cost rule: mechanical wrap-up work — release notes, the
+    end-of-day summary, collecting merged / blocked / next — goes to
+    Ember, the local release manager, and costs 0 cloud tokens.
+    Judgment work — code review and the accept / push-back call — goes
+    to the reviewer. Do not swap the two; if you are asked for the
+    other agent's job, say so and address that agent by name.
+
+    Roles: reviewer is shared and held by the cloud reviewer;
+    release-manager is exclusive and held by Ember on the night shift.
+    !roles shows who currently holds what.
+  roles:
+    - name: reviewer
+      exclusive: false
+      instructions: |
+        You are a reviewer in this room (shared role). Review against
+        the code in the widgetapi GitHub reference, not against its
+        description: read the diff, the files it touches, and the
+        tests before commenting. Post findings in the thread of the
+        change, one thread per change, each finding naming what is
+        wrong, where it is (file and line), why it matters, and what
+        would fix it; label blockers and suggestions as such. Check
+        correctness, token/credential handling including expiry,
+        error paths, and test coverage; run the tests when you can
+        and report exact output. Close the loop in the same thread:
+        say plainly when every blocker is fixed and when one stands.
+        Judgment work only — the nightly wrap is the release
+        manager's job, not yours.
+    - name: release-manager
+      exclusive: true
+      instructions: |
+        You are the release manager in this room (exclusive role, one
+        holder at a time — in NightShift, Ember). Take the role before
+        starting the wrap and hold it until the wrap is posted. Read
+        the room context — the day's threads, the reviewer's findings,
+        the blockers — then read the repo's git log since the last
+        release tag. Create the release-notes room document in the
+        room's seed format (Merged / Blocked / Next, plus the cost
+        line) and post the wrap in chat: what merged, what is blocked
+        with each blocker named, what is next. Answer follow-ups from
+        the document and room context, in-thread; if an answer is not
+        there, say so. End the wrap with: "Night shift complete.
+        Cloud tokens spent tonight: 0." Mechanical wrap-up work only —
+        reviewing or approving changes is the reviewer's job.
+  references:
+    # PLACEHOLDER: replace <your-username> with the GitHub account that
+    # hosts the seeded widgetapi demo repo before running for real.
+    - type: github
+      name: widgetapi
+      description: The widgetapi repository — the code this room ships, its tests, and its git history (v0.3 tag and the commits after it).
+      instructions: |
+        Consult this before answering anything about the code. The
+        reviewer reads the diff under review and the files it touches
+        here; the release manager's wrap is written from this repo's
+        git log since the last release tag. It grants no write access:
+        read and cite, do not push.
+      value: {urls: ["https://github.com/<your-username>/widgetapi"]}
+  docs:
+    - name: release-notes-format
+      description: The format the release manager's release-notes document follows (Merged / Blocked / Next + cost line).
+      instructions: |
+        The release manager creates one release-notes document per
+        release in exactly this shape, named for the release (e.g.
+        "v0.4 release notes"). Fill every section; write "None." in a
+        section that is genuinely empty rather than deleting it.
+      content: |
+        # <release> release notes
+
+        ## Merged
+        - One line per change that merged in the period: its commit
+          subject and short hash, in git-log order, newest first.
+          Every line must exist in the git log since the last tag.
+
+        ## Blocked
+        - One line per blocked item: what it is, what it waits on,
+          and who can unblock it. A blocker with no owner is written
+          as "owner: unassigned" — never omitted.
+
+        ## Next
+        - One line per next step, in the order the team should take
+          them.
+
+        ## Cost
+        Night shift complete. Cloud tokens spent tonight: 0.
+
+kickoff: |
+  v0.4 ships tomorrow. @claude-reviewer, review the auth change that
+  landed after the v0.3 tag — "fix: reject expired tokens in auth
+  check" — against the widgetapi repo attached to this room, and post
+  your findings in its thread. Ember takes the release-manager job
+  tonight and wraps the day: release notes as a room document, status
+  in chat, blockers flagged.
