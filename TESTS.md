@@ -78,3 +78,14 @@ entries into a 12,000-character budget instead of a flat last-30 window, and
 `read_context` reads up to 100 entries. Unit tests: 11/11 passing after the
 change; test 2 re-run went from 1/3 to 3/3. No other code was changed during
 the torture session.
+
+---
+## Audit addendum — 2026-11-07 (post-ship frame/audio audit)
+
+- The burned-in caption track ends at 2:19.6; the video's final ~4s (closing line + settle) carry no
+  burned captions. The shipped .srt/.vtt end at 2:22.9 and cover the closing line; the Pages
+  player serves those caption files, so the closing line is captioned there.
+- The final ~19s (from 2:04) run without narration by design — narration's last line ends at
+  ~2:04 while the closing roles shot and document-list view play out under the room's own text.
+- The short cut's captions sit ~0.9s proud of the picture's bottom edge (drawn to y=1030 of a
+  1031-line picture); they render straddling the frame's bottom edge in some players.
