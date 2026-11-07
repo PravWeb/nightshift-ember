@@ -13,10 +13,9 @@
 # `release-manager` role when the human hands it the wrap. That is the
 # point of the project: bring your own agent, on your own hardware.
 #
-# Before running for real, replace the placeholder in the GitHub
-# reference (and in the reviewer's `repo:`) below:
-#   https://github.com/<your-username>/widgetapi
-# `<your-username>` is the GitHub account hosting the seeded demo repo
+# Before running for real, the GitHub reference below points at the
+# seeded demo repo, pushed to GitHub as:
+#   https://github.com/PravWeb/widgetapi
 # (source in `project/demo-repo/`). See `room/manual-setup.md`.
 #
 # Grammar follows the official v1 examples
@@ -56,8 +55,7 @@ agents:
     provider: "{provider}"
     location: "{location}"
     directory: "{directory}"
-    # PLACEHOLDER: replace <your-username> with the account hosting widgetapi.
-    repo: "https://github.com/<your-username>/widgetapi"
+    repo: "https://github.com/PravWeb/widgetapi"
     instructions: |
       You are claude-reviewer, the cloud reviewer in the nightshift room.
       You hold the shared reviewer role there. Your job is judgment work:
@@ -164,8 +162,7 @@ room:
         Cloud tokens spent tonight: 0." Mechanical wrap-up work only —
         reviewing or approving changes is the reviewer's job.
   references:
-    # PLACEHOLDER: replace <your-username> with the GitHub account that
-    # hosts the seeded widgetapi demo repo before running for real.
+    # The seeded widgetapi demo repo, pushed to GitHub.
     - type: github
       name: widgetapi
       description: The widgetapi repository — the code this room ships, its tests, and its git history (v0.3 tag and the commits after it).
@@ -175,7 +172,7 @@ room:
         here; the release manager's wrap is written from this repo's
         git log since the last release tag. It grants no write access:
         read and cite, do not push.
-      value: {urls: ["https://github.com/<your-username>/widgetapi"]}
+      value: {urls: ["https://github.com/PravWeb/widgetapi"]}
   docs:
     - name: release-notes-format
       description: The format the release manager's release-notes document follows (Merged / Blocked / Next + cost line).

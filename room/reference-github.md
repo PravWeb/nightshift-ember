@@ -6,10 +6,9 @@ the room's `references:` with `type: github`.
 
 - **Name:** widgetapi
 - **Type:** github
-- **URL:** `https://github.com/<your-username>/widgetapi` — placeholder.
-  Replace `<your-username>` with the GitHub account that hosts the demo
-  repo before running the template for real (see `manual-setup.md`).
-  The seeded source lives locally in `project/demo-repo/`.
+- **URL:** `https://github.com/PravWeb/widgetapi` — the demo repo,
+  pushed to GitHub from the seeded source in `project/demo-repo/`
+  (see `manual-setup.md`).
 
 ---
 
