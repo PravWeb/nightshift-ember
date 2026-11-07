@@ -89,3 +89,22 @@ the torture session.
   ~2:04 while the closing roles shot and document-list view play out under the room's own text.
 - The short cut's captions sit ~0.9s proud of the picture's bottom edge (drawn to y=1030 of a
   1031-line picture); they render straddling the frame's bottom edge in some players.
+
+## Rebuild addendum (2026-11-07, demo rebuild crew)
+
+The short demo was rebuilt to close the audit's presentation nits. Picture source: the
+verified silent master (demo/nightshift-demo-short-silent.mp4, md5 40429a3fcafd1913127299d4e1b4bee5) —
+the exact picture edit the audit watched — with a 3.0s title card, a 3.0s end card
+(repo URL + "Cloud tokens spent tonight: 0"), and five per-beat annotation cards placed
+immediately AFTER each beat's narration completes (a first placement collided with the
+giant burned captions and was caught on frame reads — the cards now sit in clean air).
+Captions re-burned from narration.txt at FontSize 21, MarginV=42 (fully in-frame, above
+the persistent footer, closing line covered; sidecar .srt/.vtt regenerated from the new
+mix's actual placements). New featured file: demo/nightshift-demo-short.mp4,
+md5 c6e52a98198d0e930587659e6b9cf3de, 148.2s, 1920x1030, loudness -14.03 LUFS (loudnorm
+measurement pass), true peak -1.22 dB. Narration is the audit-verified Chatterbox clips
+unchanged; placements re-anchored (+2s card shift). The previous audited cut is preserved
+as demo/nightshift-demo-short-v1.mp4 (md5 66ecdd0266dd1779e620099d9a9c0a72). All encodes
+ran on the user's PC (NVENC); frame verification by direct reads of 18 extracted frames.
+Known accepted nit, unchanged from the audited cut: the silent master's own giant
+in-picture caption style and its persistent footer line are part of its picture.
