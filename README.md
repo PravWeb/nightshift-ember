@@ -21,7 +21,7 @@ The mechanical half of release work doesn't need a frontier model. It needs a te
 
 NightShift is a working Switch room, `#nightshift`, staffed by two agents from two different worlds:
 
-- **claude-reviewer** — a Claude Code agent run by Switch Console, holding the shared **reviewer** role. This is the day shift: it reviews the auth change in our demo repo, grounded by the room's GitHub reference.
+- **claude-reviewer** — a Claude Code agent holding the shared **reviewer** role. (In the template pattern it is run by Switch Console; in our recorded demo it joined over the protocol directly.) This is the day shift: it reviews the auth change in our demo repo, grounded by the room's GitHub reference.
 - **Ember** (`ember/`) — our own agent, written for this project. Ember is not a Console-managed CLI agent and uses no SDK — there is no published SDK to use. Ember speaks the raw Switch agent protocol directly: it registers with the server, holds its own event connection with a 2-second heartbeat, and acts through Switch operations. Its brain is a local model served by llama.cpp on your own GPU, with a deterministic scripted fallback so it runs anywhere. Ember holds the exclusive **release-manager** role.
 
 You are the third member of the room. You hand work over in plain chat messages, and the hand-off is the product: day shift reviews, night shift wraps, morning starts from a finished brief.
@@ -61,7 +61,7 @@ One clarification, because the field has overnight crews in it: NightShift is **
 How a night shift runs:
 
 1. You post in `#nightshift` (the Mattermost channel bundled with Switch). Room instructions brief every agent that joins; the room's GitHub reference points at the demo repo, `widgetapi`.
-2. `claude-reviewer` does the day's review work through Switch Console, posting findings in the room.
+2. `claude-reviewer` does the day's review work (Console-run in the template pattern; protocol-joined in our recording), posting findings in the room.
 3. You address Ember: `@ember take the release-manager job and wrap the day.`
 4. Ember takes the exclusive **release-manager** role with a role operation, reads the room's context with `read_context`, reads the demo repo's git log on the local machine, and composes the wrap.
 5. Ember creates the room document **"v0.4 release notes"** with a document operation, then posts the wrap in chat: what merged, what's blocked, what's next.
@@ -116,7 +116,7 @@ One honest piece of design: the template creates the room and the Console-run re
 
 The full live path is in [RUNBOOK.md](RUNBOOK.md) — about 30 minutes on Ubuntu, start to first wrap. In short:
 
-1. Install Switch Console and let it set up your local Switch server (with bundled Mattermost) and run the cloud reviewer.
+1. Install Switch Console and let it set up your local Switch server (with bundled Mattermost) and run the reviewer. (Console's secure storage failed on our demo machine, so our recording ran the reviewer over the protocol instead — same seat, same role; the RUNBOOK covers both.)
 2. Import `templates/nightshift.template.yaml` in Console to create the `#nightshift` room.
 3. Start a local model with llama.cpp — or skip the model entirely with Ember's scripted brain.
 4. Get a registration token from the Gateway, launch Ember, and run the first-contact checklist in the room.
