@@ -6,11 +6,13 @@ During the day, a cloud agent reviews code in your Switch room. When it clocks o
 
 Built for Flip the Switch, Track 1 — Best Business Workflow.
 
-## Watch the demo — plays in your browser (2m23s, narrated + subtitled)
+## Watch the demo — plays right here in the README (2m28s, narrated + subtitled)
 
-[![NightShift demo — the #nightshift room: reviewer takes the reviewer role, Ember takes the exclusive release-manager role, wraps the day into a "v0.4 release notes" room document, and answers the morning blocker question](demo/demo-poster.png)](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo-short.mp4)
+https://github.com/user-attachments/assets/4c6bb8b7-85b2-40bf-89dc-5bd84bddd77b
 
-**[▶ Watch the demo — 2m23s, narrated + subtitled](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo-short.mp4)** (plays in GitHub's file viewer) · direct file: [raw MP4](https://raw.githubusercontent.com/PravWeb/nightshift-ember/main/demo/nightshift-demo-short.mp4) · [full uncut take (5m16s)](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4) · [narration script](demo/narration.txt) · shot-by-shot script: [DEMO.md](DEMO.md)
+[![NightShift demo — the #nightshift room: reviewer takes the reviewer role, Ember takes the exclusive release-manager role, wraps the day into a "v0.4 release notes" room document, and answers the morning blocker question](demo/demo-poster.png)](https://github.com/user-attachments/assets/4c6bb8b7-85b2-40bf-89dc-5bd84bddd77b)
+
+**[▶ Watch the demo — 2m28s, narrated + subtitled](https://github.com/user-attachments/assets/4c6bb8b7-85b2-40bf-89dc-5bd84bddd77b)** · files: [short cut (blob view)](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo-short.mp4) · [raw MP4](https://raw.githubusercontent.com/PravWeb/nightshift-ember/main/demo/nightshift-demo-short.mp4) · [full uncut take (5m16s)](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4) · [narration script](demo/narration.txt) · shot-by-shot script: [DEMO.md](DEMO.md)
 
 Recorded live in the real room, one take: `!roles` and the kickoff → the reviewer reviews the auth PR in-thread → `@ember take the release-manager job and wrap the day` (Ember takes the exclusive role and writes the release-notes room document) → the morning question, answered from the document → closing `!roles`, both seats held. Honest setup note: on this machine the reviewer's model routes locally through the owner's router, so the recorded room spent no cloud tokens at all — the seat takes a frontier model unchanged whenever you point it at one.
 
