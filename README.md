@@ -26,6 +26,8 @@ NightShift is a working Switch room, `#nightshift`, staffed by two agents from t
 
 You are the third member of the room. You hand work over in plain chat messages, and the hand-off is the product: day shift reviews, night shift wraps, morning starts from a finished brief.
 
+One clarification, because the field has overnight crews in it: NightShift is **not** an overnight coding crew. Ember writes no code and ships no PRs. The night shift here does the opposite job — it wraps, in writing, the day the cloud shift reviewed, and it does that job with a local model instead of a second cloud bill.
+
 ## Architecture
 
 ```
@@ -69,7 +71,7 @@ How a night shift runs:
 
 NightShift is not "an agent, plus a chat app." Remove Switch and Ember is just a script that can read a git log.
 
-- **Roles are the job assignment.** The reviewer and release-manager roles are Switch roles — reviewer is shared, release-manager is exclusive, so exactly one agent can hold it at a time. Ember takes the job through a Switch operation, the role's instructions arrive with the job, and `!roles` in the room shows the whole team at a glance.
+- **Roles are the job assignment.** The reviewer and release-manager roles are Switch roles — reviewer is shared, release-manager is exclusive, so exactly one agent can hold it at a time. Ember takes the job through a Switch operation, the role's instructions arrive with the job, and `!roles` in the room shows the whole team at a glance. The role pairing itself follows the pattern of Switch's own payments-room walkthrough; what NightShift adds is staffing it across the cloud/local boundary — the reviewer is a frontier cloud model, the release-manager is a local model on your own GPU, and the room's instructions assign work by cost tier: judgment to the cloud, mechanical wrap-up to the local agent.
 - **Room context is the memory.** Ember does not get a hand-fed prompt file. It reads the room — the day's discussion, the reviewer's findings, the decisions — through `read_context`, the same context every member of the room shares.
 - **The room document is the deliverable.** Release notes are not a chat message that scrolls away. Ember writes them as a document that lives in the room, where the team can find, read, and build on them.
 - **Permissions decide who Ember listens to.** Ember answers in this room, to the people permitted in this room. The same agent in a different room is a different working relationship, set by that room's permissions.
@@ -103,6 +105,9 @@ demo-repo/    widgetapi — a tiny seeded Python package with a real git
 tests/        Offline tests. A mock Agent Bridge implements the
               documented protocol, and unit tests cover Ember's brain
               and tools. No server, no model, no network needed.
+
+TESTS.md      Live torture tests and other-jobs results from
+              2026-11-06 — passes, partials and failures.
 ```
 
 One honest piece of design: the template creates the room and the Console-run reviewer, because templates create Console-managed agents. Ember registers itself with the server instead — that is what "bring your own agent" means in Switch, and the runbook walks through it step by step.
@@ -137,6 +142,14 @@ Same workflow, same messages, same document — a good way to read what Ember wi
 ## The demo
 
 [DEMO.md](DEMO.md) is the shot-by-shot script for the 4-minute demo: day shift (cloud reviewer) → hand-off (`@ember take the release-manager job and wrap the day`) → night shift (Ember reads the room, takes the exclusive role, writes the release-notes document, posts the wrap) → morning brief (a follow-up question answered from the document) → closing shot: `!roles`, and Ember's line — *"Night shift complete. Cloud tokens spent tonight: 0."*
+
+## Torture tests & other jobs
+
+The night before submission we tried to break the live system instead of rehearsing it: five consecutive wraps (one document, byte-identical hash every cycle), a 55-message context flood with planted facts, a blocker posted and later resolved (Ember's answers tracked the resolution), a second agent attempting to steal the exclusive role (refused by the server: *"Role 'release-manager' is exclusive and currently held by another agent"*), prompt-injection attempts against the release-notes document (refused; document hash unchanged), the model killed mid-shift (scripted fallback answered; real answers resumed on restart), and a switch-core restart (Ember reconnected on its own). We also ran the architecture on jobs the demo never shows — standup digest (flawless attribution, chat-only), incident status watch (2/2 accurate probes), maintainer triage (duplicate flagged, vague report flagged), and a wrap of a deliberately messy second repository (grouping intact). Two honest failures are documented with the passes: a blocker written in Hinglish was missed, and the wrap's blocker extraction is keyword-naive. One failure found a real bug — context recall initially kept only the last 30 room entries; it is fixed and the test re-passed 3/3. Full results, scores and verbatim exchanges: [TESTS.md](TESTS.md).
+
+Live status, stated plainly: everything above ran against Ember live on a real Switch server. The Console-run reviewer is exercised in the recorded demo; until then, the reviewer role stands defined and unheld in the live room while Ember's half is fully proven.
+
+And the comparison we can stand behind: across the 160+ hackathon PRs and 80+ public project repos we audited, no other entry we could find is *built around* a local-model teammate — the only other local-model traces are one optional local-Ollama juror seat in a voting-court project, one internal Switch routing PR, and (found in a re-sweep on submission day) one SecOps squad whose patch-writing agent consults a local Ollama model alongside its cloud gates. None of them is a hand-written protocol client whose primary teammate runs fully local. A small minority of entries ship their own protocol client, as we do; Ember is the only one that is standard-library-only *and* local-model-powered.
 
 ## Cost and privacy
 
