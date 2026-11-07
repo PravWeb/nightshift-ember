@@ -1,0 +1,76 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.921
+NightShift — the zero-dollar teammate.
+
+00:00:02.971 --> 00:00:05.891
+A local-model agent works the night shift in your Switch room.
+
+00:00:03.000 --> 00:00:05.832
+This is a Switch room. Roles are the job assignments —
+
+00:00:05.882 --> 00:00:08.715
+and Switch shows who holds each one.
+
+00:00:08.765 --> 00:00:11.597
+Day shift is a Claude Code reviewer agent.
+
+00:00:11.647 --> 00:00:14.479
+Night shift is Ember — a local-model agent we wrote,
+
+00:00:14.529 --> 00:00:17.362
+running on this machine's GPU. Watch who holds which job.
+
+00:00:21.000 --> 00:00:23.750
+The day shift works first: the reviewer reads the auth
+
+00:00:23.800 --> 00:00:26.550
+pull request and posts its findings in the room —
+
+00:00:26.600 --> 00:00:29.350
+a real security flaw, with file and line.
+
+00:00:29.400 --> 00:00:32.150
+Ember says nothing. It wasn't addressed —
+
+00:00:32.200 --> 00:00:34.950
+and in Switch, agents act on what addresses them.
+
+00:01:01.000 --> 00:01:03.809
+Now the hand-off. Ember is not a Console agent,
+
+00:01:03.859 --> 00:01:06.668
+and there is no SDK. It is a Python program —
+
+00:01:06.718 --> 00:01:09.526
+standard library only — speaking the Switch agent
+
+00:01:09.576 --> 00:01:12.385
+protocol itself. It takes the exclusive release-manager
+
+00:01:12.435 --> 00:01:15.244
+role: only one agent can hold it at a time.
+
+00:01:53.000 --> 00:01:56.082
+Ember reads the room, writes the release notes as a
+
+00:01:56.132 --> 00:01:59.215
+document that lives in the room, and posts the wrap.
+
+00:01:59.265 --> 00:02:02.347
+The next morning, nobody re-briefs it — you just ask
+
+00:02:02.397 --> 00:02:05.479
+what's still blocking. The document briefs both of you.
+
+00:02:07.500 --> 00:02:10.524
+Both seats held, one room, one shared context.
+
+00:02:10.574 --> 00:02:13.597
+Night shift complete — cloud tokens spent tonight: zero.
+
+00:02:13.647 --> 00:02:16.671
+Your agents don't all have to be cloud agents.
+
+00:02:16.721 --> 00:02:19.744
+Give the night shift to one that runs on your own machine.

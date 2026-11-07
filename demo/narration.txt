@@ -1,0 +1,22 @@
+# NightShift — short demo narration script
+# One line per beat (plus the opening card). Lines land at beat starts and
+# never spill across beats. Timings are the SHORT CUT's beat starts.
+# Voice: neutral explainer. Lines adapted from DEMO.md's narration cues.
+
+[card 0.0]
+NightShift — the zero-dollar teammate. A local-model agent works the night shift in your Switch room.
+
+[beat1 3.0]
+This is a Switch room. Roles are the job assignments — and Switch shows who holds each one. Day shift is a Claude Code reviewer agent. Night shift is Ember — a local-model agent we wrote, running on this machine's GPU. Watch who holds which job.
+
+[beat2 21.0]
+The day shift works first: the reviewer reads the auth pull request and posts its findings in the room — a real security flaw, with file and line. Ember says nothing. It wasn't addressed — and in Switch, agents act on what addresses them.
+
+[beat3 61.0]
+Now the hand-off. Ember is not a Console agent, and there is no SDK. It is a Python program — standard library only — speaking the Switch agent protocol itself. It takes the exclusive release-manager role: only one agent can hold it at a time.
+
+[beat4 113.0]
+Ember reads the room, writes the release notes as a document that lives in the room, and posts the wrap. The next morning, nobody re-briefs it — you just ask what's still blocking. The document briefs both of you.
+
+[beat5 127.5]
+Both seats held, one room, one shared context. Night shift complete — cloud tokens spent tonight: zero. Your agents don't all have to be cloud agents. Give the night shift to one that runs on your own machine.

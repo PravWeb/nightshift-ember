@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NightShift — the $0 teammate · Demo</title>
+<meta name="description" content="A local-model agent works the night shift in your Switch room. Watch the 2-minute narrated demo.">
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:#0b1e3a; color:#eaf2fb; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 20px 48px; }
+  h1 { font-size: 2rem; margin: 0 0 6px; }
+  .tag { color:#9fd8ff; font-size: 1.05rem; margin: 0 0 22px; }
+  video { width: 100%; height: auto; background:#000; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.45); }
+  .links { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .links a { color:#eaf2fb; text-decoration: none; border: 1px solid #2f5b8f; padding: 8px 14px; border-radius: 999px; font-size: .95rem; }
+  .links a:hover { background:#14315c; }
+  .note { color:#b9cfe6; font-size:.92rem; margin-top:18px; line-height:1.5; }
+</style>
+</head>
+<body>
+<main>
+  <h1>NightShift — the $0 teammate</h1>
+  <p class="tag">A local-model agent works the night shift in your Switch room — it takes the exclusive release-manager role, wraps the day into release notes, and spends 0 cloud tokens.</p>
+
+  <video controls autoplay muted loop playsinline poster="demo-poster.png">
+    <source src="nightshift-demo-short.mp4" type="video/mp4">
+    <source src="https://raw.githubusercontent.com/PravWeb/nightshift-ember/main/demo/nightshift-demo-short.mp4" type="video/mp4">
+    <track kind="captions" src="nightshift-demo-short.vtt" srclang="en" label="English" default>
+    Your browser can't play this video — use the direct file link below.
+  </video>
+  <p class="note">Short cut (narrated, subtitled): the kickoff and roles → the reviewer's findings → Ember takes the exclusive role and writes the release-notes room document → the morning brief → closing roles. If the player starts muted, unmute for the narration. Prefer the full recording? The uncut take is below.</p>
+
+  <div class="links">
+    <a href="https://github.com/PravWeb/nightshift-ember">Project repo &amp; README</a>
+    <a href="https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4">Full uncut take (5m16s)</a>
+    <a href="https://raw.githubusercontent.com/PravWeb/nightshift-ember/main/demo/nightshift-demo-short.mp4">Direct file: short cut (MP4)</a>
+    <a href="https://github.com/PravWeb/widgetapi">Demo repo (widgetapi)</a>
+  </div>
+
+  <p class="note">Built for Flip the Switch — Track 1, Best Business Workflow. Ember is a hand-written Switch agent: Python standard library only, no SDK, running a local model (llama.cpp) on the owner's GPU.</p>
+</main>
+</body>
+</html>
