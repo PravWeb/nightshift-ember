@@ -23,6 +23,26 @@ SYSTEM_PROMPT = (
     "appear in the context. Never invent commits, people, or status."
 )
 
+# Room-context hygiene: the Switch bridge can inject its own notices into
+# the room under an agent's name when no provider session is attached —
+# e.g. "<name> I don't have a session connected to this room... run: codex
+# connect to switch room ..." (observed live 2026-11-07: the notice was
+# injected under Ember's name because Ember registered with the generic
+# "codex" provider profile). Those notices are platform plumbing, not room
+# content: quoting or following them derails the answer (the model parroted
+# the notice as its reply). Filter them out of the brain's context.
+_PLATFORM_NOTICE_MARKERS = (
+    "don't have a session connected",
+    "do not have a session connected",
+    "connect to switch room",
+    "my operator should run",
+)
+
+
+def _is_platform_notice(entry: dict) -> bool:
+    body = (entry.get("body") or "").lower()
+    return any(marker in body for marker in _PLATFORM_NOTICE_MARKERS)
+
 
 def flatten_context(context: dict | None) -> list[dict]:
     """Flatten a read_context result ({threads:[{root, replies}]}) into a
@@ -46,16 +66,38 @@ def flatten_context(context: dict | None) -> list[dict]:
         flat = context.get(key)
         if isinstance(flat, list):
             entries.extend(e for e in flat if isinstance(e, dict))
-    return entries
+    return [e for e in entries if not _is_platform_notice(e)]
 
 
-def format_context(entries: list[dict], limit: int = 30) -> str:
-    lines = []
-    for entry in entries[-limit:]:
+def format_context(
+    entries: list[dict],
+    limit: int = 100,
+    char_budget: int = 12000,
+    per_entry_chars: int = 1000,
+) -> str:
+    """Format the newest entries that fit a character budget.
+
+    Found live (2026-11-06, torture test T02): a flat last-30-entries
+    window silently dropped planted facts at positions 3 and 28 of a
+    55-message flood — Ember answered "no mention in the room context"
+    for facts that were in the room, just outside the window. A budget
+    (newest first, ~12k chars ≈ 3k tokens, per-entry cap so one huge
+    message cannot crowd out everything else) keeps short chatter fully
+    in view while still bounding the prompt for an 8k-context local
+    model."""
+    lines: list[str] = []
+    total = 0
+    for entry in reversed(entries[-limit:]):
         sender = entry.get("sender_name") or entry.get("sender") or "?"
         body = (entry.get("body") or "").strip()
-        if body:
-            lines.append(f"{sender}: {body}")
+        if not body:
+            continue
+        line = f"{sender}: {body[:per_entry_chars]}"
+        if lines and total + len(line) > char_budget:
+            break
+        lines.append(line)
+        total += len(line)
+    lines.reverse()
     return "\n".join(lines)
 
 
@@ -109,24 +151,37 @@ def llm_brain(
     *,
     base_url: str,
     model: str,
-    timeout: float = 30.0,
+    timeout: float = 60.0,
 ) -> str:
     """One chat completion against the local LLM server.
 
     Raises on any transport or shape problem; callers fall back."""
     entries = flatten_context(context)
     transcript = format_context(entries)
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    # ONE system message, with the context folded into it: several chat
+    # templates (Qwen's included) raise "System message must be at the
+    # beginning" — an HTTP 500 from llama.cpp — when a second system
+    # message follows the first (found live, 2026-11-06).
+    system = SYSTEM_PROMPT
     if transcript:
-        messages.append(
-            {
-                "role": "system",
-                "content": f"Recent room context:\n{transcript}",
-            }
-        )
+        system += f"\n\nRecent room context:\n{transcript}"
+    messages = [{"role": "system", "content": system}]
     messages.append({"role": "user", "content": user_text})
     payload = json.dumps(
-        {"model": model, "messages": messages, "temperature": 0.3}
+        {
+            "model": model,
+            "messages": messages,
+            "temperature": 0.3,
+            # Bound the generation: an unbounded reasoning model will
+            # think until the client gives up (observed live: HTTP 500 /
+            # timeout against llama.cpp with Qwen3.5, whose thinking
+            # lands in reasoning_content and starves the answer).
+            "max_tokens": 512,
+            # Ask the chat template to skip the thinking block entirely —
+            # Ember needs a short room answer, not a chain of thought.
+            # Templates that don't know the kwarg ignore it.
+            "chat_template_kwargs": {"enable_thinking": False},
+        }
     ).encode("utf-8")
     request = urllib.request.Request(
         f"{base_url.rstrip('/')}/chat/completions",

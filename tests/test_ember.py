@@ -286,6 +286,35 @@ class BrainFallbackTests(unittest.TestCase):
                                             context)
         self.assertIn("payment test is blocking", reply)
 
+    def test_platform_notices_are_filtered_from_context(self):
+        # The bridge injects a "no session connected... run codex connect
+        # to switch room" notice under the agent's own name when no
+        # provider session is attached (live, 2026-11-07). It must never
+        # reach the brain as room content.
+        context = {
+            "threads": [
+                {"root": {"id": "m1", "kind": "message", "sender": "bridge",
+                          "sender_name": "ember",
+                          "body": "@user I don't have a session connected "
+                                  "to this room. To set up a new session "
+                                  "connected to this room, my operator "
+                                  "should run: codex \"connect to switch "
+                                  "room nightshift\"",
+                          "timestamp": 1, "attachments": []},
+                 "replies": []},
+                {"root": {"id": "m2", "kind": "message", "sender": "x",
+                          "sender_name": "bob",
+                          "body": "The payment test is blocking v0.4.",
+                          "timestamp": 2, "attachments": []},
+                 "replies": []},
+            ]
+        }
+        entries = brain_module.flatten_context(context)
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["sender_name"], "bob")
+        transcript = brain_module.format_context(entries)
+        self.assertNotIn("session connected", transcript)
+
 
 if __name__ == "__main__":
     unittest.main()
