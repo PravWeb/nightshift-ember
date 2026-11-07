@@ -19,11 +19,12 @@ to one.
 
 1. Create an empty repo named `widgetapi` on your GitHub account.
 2. Push the seeded local repo to it:
-   `cd project/demo-repo && git remote add origin https://github.com/<your-username>/widgetapi.git && git push -u origin main --tags`
-   (substitute your account for `<your-username>`; keep the `v0.3` tag
+   `cd project/demo-repo && git remote add origin https://github.com/PravWeb/widgetapi.git && git push -u origin main --tags`
+   (that is this project's real repo; if you fork under a different
+   account, substitute yours — keep the `v0.3` tag
    in the push — the demo reads the post-tag history).
-3. In Switch Console, open the template and replace
-   `https://github.com/<your-username>/widgetapi` in **both** places —
+3. In Switch Console, open the template and confirm
+   `https://github.com/PravWeb/widgetapi` in **both** places —
    the reviewer's `repo:` and the room reference's `value.urls` — with
    the real URL, then run the template.
 

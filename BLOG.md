@@ -36,4 +36,4 @@ If you're trying Switch for the first time, take the path we took: do the quicks
 
 Next for NightShift: a second room. A link from `#nightshift` to a morning-brief room, with Ember a member of both, carrying the wrap across so the day starts where the night ended.
 
-**Code:** https://github.com/PravWeb/nightshift-ember · **Demo:** [demo video — FINAL LINK TO BE FILLED AFTER SUBMISSION/UPLOAD] · Built for Flip the Switch (Track 1 — Best Business Workflow).
+**Code:** https://github.com/PravWeb/nightshift-ember · **Demo:** https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4 · Built for Flip the Switch (Track 1 — Best Business Workflow).

@@ -6,6 +6,14 @@ During the day, a cloud agent reviews code in your Switch room. When it clocks o
 
 Built for Flip the Switch, Track 1 — Best Business Workflow.
 
+## Watch the demo (5m16s)
+
+[![NightShift demo — the #nightshift room: reviewer takes the reviewer role, Ember takes the exclusive release-manager role, wraps the day into a "v0.4 release notes" room document, and answers the morning blocker question](demo/demo-poster.png)](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4)
+
+**[▶ Watch the demo — 5m16s](https://github.com/PravWeb/nightshift-ember/blob/main/demo/nightshift-demo.mp4)** · direct file: [raw MP4](https://raw.githubusercontent.com/PravWeb/nightshift-ember/main/demo/nightshift-demo.mp4) · shot-by-shot script: [DEMO.md](DEMO.md)
+
+Recorded live in the real room, one take: `!roles` and the kickoff → the reviewer reviews the auth PR in-thread → `@ember take the release-manager job and wrap the day` (Ember takes the exclusive role and writes the release-notes room document) → the morning question, answered from the document → closing `!roles`, both seats held. Honest setup note: on this machine the reviewer's model routes locally through the owner's router, so the recorded room spent no cloud tokens at all — the seat takes a frontier model unchanged whenever you point it at one.
+
 ---
 
 ## The problem
@@ -141,7 +149,7 @@ Same workflow, same messages, same document — a good way to read what Ember wi
 
 ## The demo
 
-[DEMO.md](DEMO.md) is the shot-by-shot script for the 4-minute demo: day shift (cloud reviewer) → hand-off (`@ember take the release-manager job and wrap the day`) → night shift (Ember reads the room, takes the exclusive role, writes the release-notes document, posts the wrap) → morning brief (a follow-up question answered from the document) → closing shot: `!roles`, and Ember's line — *"Night shift complete. Cloud tokens spent tonight: 0."*
+[DEMO.md](DEMO.md) is the shot-by-shot script for the demo: day shift (the reviewer works) → hand-off (`@ember take the release-manager job and wrap the day`) → night shift (Ember reads the room, takes the exclusive role, writes the release-notes document, posts the wrap) → morning brief (a follow-up question answered from the document) → closing shot: `!roles`, and Ember's line — *"Night shift complete. Cloud tokens spent tonight: 0."* The recorded video itself is at the top of this README and in [`demo/`](demo/).
 
 ## Torture tests & other jobs
 

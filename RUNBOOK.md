@@ -50,7 +50,7 @@ This runbook takes you from a clean Ubuntu machine to Ember completing its first
 
 1. Open Switch Console and follow its setup for running Switch **on this computer**. Console starts the stack with Docker, chooses free ports, creates the admin account, and signs you in — there is no configuration file to write.
 2. This local Switch comes with **Mattermost** bundled, so your rooms have a chat app with no separate workspace to set up.
-3. When Console prompts for an AI coding agent, sign in to **Claude Code**. This is the account the room's cloud reviewer (`claude-reviewer`) will run under.
+3. When Console prompts for an AI coding agent, sign in to **Claude Code**. In the pattern setup, this is the account the room's reviewer (`claude-reviewer`) runs under. (In our recorded demo the reviewer joined over the protocol instead — see README's live-status note — so this Console path is the template route, not the only one.)
 4. Keep Console running. Agents that Console runs — including the reviewer — only answer while Console is open.
 
 ## Step 3 — Star-check with switch-buddy (~3 min)
