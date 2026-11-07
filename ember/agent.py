@@ -53,6 +53,10 @@ class EmberAgent:
         self.config = config
         self.client = client or SwitchClient(config)
         self.room_id: str | None = config.room_id or None
+        # Room documents seen in the connect payload: name -> id. Lets a
+        # repeat wrap update the existing release-notes document instead
+        # of failing on the room's unique-name rule.
+        self.room_documents: dict[str, str] = {}
         self.stop_event = threading.Event()
         self.connection_dead = threading.Event()
         self.heartbeat: HeartbeatThread | None = None
@@ -79,8 +83,12 @@ class EmberAgent:
                     break
         if self.room_id:
             try:
-                client.connect_to_room(self.room_id)
+                payload = client.connect_to_room(self.room_id)
                 _log(f"connected to room {self.room_id}")
+                if isinstance(payload, dict):
+                    for doc in payload.get("documents") or []:
+                        if isinstance(doc, dict) and doc.get("name") and doc.get("id"):
+                            self.room_documents[doc["name"]] = doc["id"]
             except Exception as exc:  # noqa: BLE001
                 _log(f"connect_to_room failed: {exc}")
         role = self.config.role
@@ -167,7 +175,9 @@ class EmberAgent:
 
     def _read_context_safe(self) -> dict:
         try:
-            return self.client.read_context(limit=50)
+            # 100 (was 50): matches format_context's window so a busy
+            # room's recent history is not truncated twice (T02, live).
+            return self.client.read_context(limit=100)
         except Exception as exc:  # noqa: BLE001
             _log(f"read_context failed: {exc}")
             return {"threads": []}
@@ -180,7 +190,7 @@ class EmberAgent:
         summary text."""
         context = self._read_context_safe()
         entries = flatten_context(context)
-        blockers = extract_blockers(entries)
+        blockers = extract_blockers(entries, own_name=self.config.name)
         commits: list[dict] = []
         since_tag: str | None = None
         if self.config.demo_repo:
@@ -197,7 +207,7 @@ class EmberAgent:
         )
         document_name = f"{version} release notes"
         try:
-            self.client.create_room_document(
+            result = self.client.create_room_document(
                 name=document_name,
                 description=f"Release notes for {version} (NightShift wrap)",
                 instructions=(
@@ -207,9 +217,23 @@ class EmberAgent:
                 ),
                 content=notes,
             )
+            if isinstance(result, dict) and result.get("document_id"):
+                self.room_documents[document_name] = result["document_id"]
             _log(f"created room document {document_name!r}")
         except Exception as exc:  # noqa: BLE001
-            _log(f"create_room_document failed: {exc}")
+            # Room-scoped document names are unique: a repeat wrap (a
+            # rehearsal, a re-run) must update the existing document
+            # rather than fail. Only the creating agent may update it —
+            # which is us.
+            doc_id = self.room_documents.get(document_name)
+            if doc_id:
+                try:
+                    self.client.update_room_document(doc_id, notes)
+                    _log(f"updated existing room document {document_name!r}")
+                except Exception as update_exc:  # noqa: BLE001
+                    _log(f"create failed ({exc}); update failed: {update_exc}")
+            else:
+                _log(f"create_room_document failed: {exc}")
         summary = compose_wrap_summary(
             commits, version=version, blockers=blockers,
             document_name=document_name,

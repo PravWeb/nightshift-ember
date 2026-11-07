@@ -12,7 +12,7 @@ So we built the night shift instead of buying it.
 
 We built NightShift on [Switch](https://docs.switchagents.ai), and what made it possible is a sentence from its own documentation: Switch ships no agents and no models. A Switch room is a shared workspace — people and agents in a chat channel, with roles, documents, references, and permissions — and any agent can join it, from any vendor, as long as it speaks the agent protocol.
 
-The usual way to use that freedom is through Switch Console, which runs a well-known coding agent for you — Claude Code, Codex, OpenCode — and that agent joins the room. That's the day shift, and we kept it: our `#nightshift` room has a Claude Code agent, claude-reviewer, holding the reviewer role through Console.
+The usual way to use that freedom is through Switch Console, which runs a well-known coding agent for you — Claude Code, Codex, OpenCode — and that agent joins the room. That's the day shift, and we kept it: our `#nightshift` room has a Claude Code agent, claude-reviewer, holding the reviewer role — in the recorded demo it joins over the protocol directly (our Console's secure storage refused to cooperate on demo day, and the protocol didn't care), and on this machine its model routes locally through our own router.
 
 But "if it speaks the protocol, it can join" invites a ruder question: what if the agent isn't a product at all? What if it's a program we write ourselves, backed by a model running on our own GPU?
 
@@ -28,7 +28,7 @@ Nothing about that flow works without Switch. Take the room away and Ember is a 
 
 ## What it costs, and what we'd do next
 
-The night shift's invoice is easy to read: zero cloud tokens. The day shift still spends them, deliberately, on review work where the judgement is worth it. That's the split we wanted — cloud where it earns, local where it doesn't — and privacy comes free: for Ember's work, code never leaves the machine.
+The night shift's invoice is easy to read: zero cloud tokens. In the setup we recorded, the day shift spent none either — the reviewer's model routed locally on this machine. That's not the required shape: the split we wanted is cloud where it earns, local where it doesn't, and the reviewer seat takes a frontier model unchanged whenever you point it at one. Privacy comes free for Ember's work: code never leaves the machine.
 
 The night before submitting, we torture-tested the live system instead of rehearsing it: we killed the model mid-shift and Ember fell back to its scripted brain and kept answering until the model came back; we tried to talk it into deleting its own release notes and marking everything shipped, and it refused both; we flooded the room with 55 messages and, after one real fix to how much context it reads, it still found the facts planted at the very start. It also failed honestly: a blocker written in Hinglish slipped straight past it. That miss is the true shape of a small local model — strong on the mechanical work it was hired for, with edges you can find if you push — and we'd rather publish the miss than hide it.
 

@@ -283,6 +283,17 @@ class SwitchClient:
             },
         )
 
+    def update_room_document(self, document_id: str, content: str) -> Any:
+        # Only the agent that created a document can update it; the id
+        # comes from create_room_document's result or the connect payload.
+        return self.call_op(
+            "update_room_document",
+            {"document_id": document_id, "content": content},
+        )
+
+    def load_internal_documents(self, ids: list[str]) -> Any:
+        return self.call_op("load_internal_documents", {"ids": ids})
+
     # ── heartbeat ───────────────────────────────────────────────────────
 
     def beat_once(self) -> dict:

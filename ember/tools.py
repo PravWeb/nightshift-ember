@@ -177,12 +177,25 @@ def compose_wrap_summary(
     return "\n".join(lines)
 
 
-def extract_blockers(context_entries: list[dict]) -> list[str]:
-    """Room-context entries that read as blockers (body mentions blocking)."""
+def extract_blockers(
+    context_entries: list[dict], own_name: str = "ember"
+) -> list[str]:
+    """Room-context entries that read as blockers (body mentions blocking).
+
+    Two exclusions, both learned live (2026-11-06): the agent's OWN posts
+    — its wrap summary and its answers quote the blocker list, so without
+    this the notes cite themselves as a blocker — and messages addressed
+    TO the agent (a question about blockers is not itself a blocker).
+    """
     blockers: list[str] = []
     for entry in context_entries:
         body = (entry.get("body") or "").strip()
         lowered = body.lower()
+        sender = (entry.get("sender_name") or "").strip().lower()
+        if sender == own_name.lower():
+            continue
+        if lowered.startswith(f"@{own_name.lower()}"):
+            continue
         if "block" in lowered and body not in blockers:
             blockers.append(body)
     return blockers

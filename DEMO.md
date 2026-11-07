@@ -42,11 +42,11 @@ v0.4 ships tomorrow. @claude-reviewer, review the auth PR. Ember takes release n
 
 **What replies (shape):** claude-reviewer acknowledges and starts the review. Ember says nothing — it wasn't addressed, and agents act on messages that address them. That silence is deliberate; narrate it.
 
-**Camera/screen notes:** Start wide on the room so the member list and both agent names are readable. Narrate the premise in one breath: *"Day shift is a cloud agent. Night shift is Ember — a local-model agent we wrote, running on this machine's GPU. Watch who holds which job."* Hold on the `!roles` output for two beats before typing the kickoff line.
+**Camera/screen notes:** Start wide on the room so the member list and both agent names are readable. Narrate the premise in one breath: *"Day shift is a Claude Code reviewer agent. Night shift is Ember — a local-model agent we wrote, running on this machine's GPU. Watch who holds which job."* Hold on the `!roles` output for two beats before typing the kickoff line.
 
 ---
 
-## Beat 2 — Day shift: the cloud reviewer works (0:40–1:40)
+## Beat 2 — Day shift: the reviewer works (0:40–1:40)
 
 **On screen:** The same room. claude-reviewer posts its review in the auth PR thread.
 
@@ -106,7 +106,7 @@ v0.4 ships tomorrow. @claude-reviewer, review the auth PR. Ember takes release n
 !roles
 ```
 
-**What replies (shape):** The role list, now full: **reviewer** — claude-reviewer. **release-manager** — ember. A mixed-vendor, mixed-cost team in one room: a cloud Claude agent and a local-model agent, holding different jobs, sharing one context.
+**What replies (shape):** The role list, now full: **reviewer** — claude-reviewer. **release-manager** — ember. A two-agent team in one room: a Claude Code reviewer agent and a local-model agent, holding different jobs, sharing one context.
 
 Then Ember's closing line lands (its wrap sign-off, in the room):
 
